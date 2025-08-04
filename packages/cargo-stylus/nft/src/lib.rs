@@ -14,6 +14,7 @@ use stylus_sdk::{
 };
 use alloy_sol_types::sol;
 use crate::erc721::{Erc721, Erc721Params};
+use stylus_cache_sdk::{is_contract_cacheable};
 
 // Interfaces for the Art contract and the ERC20 contract
 sol_interface! {
@@ -63,7 +64,12 @@ pub enum StylusNFTError {
 #[inherit(Erc721<StylusNFTParams>)]
 impl StylusNFT {
     /// Mints an NFT, but does not call onErc712Received
-    pub fn mint(&mut self) -> Result<(), Vec<u8>> {
+
+    pub fn is_cacheable(&self) -> bool {
+        is_contract_cacheable()
+    }
+
+    pub fn mint_isha(&mut self) -> Result<(), Vec<u8>> {
         let minter = msg::sender();
         self.erc721.mint(minter)?;
         Ok(())
